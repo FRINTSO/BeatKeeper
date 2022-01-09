@@ -25,6 +25,7 @@ namespace BeatKeeper
             services.AddSingleton<SheetStore>();
             services.AddSingleton<TemplateNotesStore>();
             services.AddSingleton<NavigationStore>();
+            services.AddSingleton<ModalNavigationStore>();
 
             services.AddTransient<INavigationService<SheetListingViewModel>>(s => CreateSheetListingNavigationService(s));
             services.AddTransient<INavigationService<SheetEditorViewModel>>(s => CreateSheetEditorNavigationService(s));
@@ -39,7 +40,11 @@ namespace BeatKeeper
                     s.GetRequiredService<SheetStore>(),
                     s.GetRequiredService<TemplateNotesStore>(),
                     s.GetRequiredService<MusicBook>(),
-                    CreateSheetListingNavigationService(s)));
+                    CreateSheetListingNavigationService(s),
+                    CreateAddTemplateNoteNavigationService(s)));
+            services.AddTransient<AddTemplateNoteViewModel>(
+                s => new AddTemplateNoteViewModel(
+                    CreateSheetEditorNavigationService(s)));
             services.AddTransient<SheetViewModel>(
                 s => new SheetViewModel(
                     s.GetRequiredService<Sheet>(),
@@ -82,6 +87,13 @@ namespace BeatKeeper
             return new LayoutNavigationService<SheetEditorViewModel>(
                 serviceProvider.GetRequiredService<NavigationStore>(),
                 () => serviceProvider.GetRequiredService<SheetEditorViewModel>());
+        }
+
+        private INavigationService<AddTemplateNoteViewModel> CreateAddTemplateNoteNavigationService(IServiceProvider serviceProvider)
+        {
+            return new ModalNavigationService<AddTemplateNoteViewModel>(
+                serviceProvider.GetRequiredService<ModalNavigationStore>(),
+                () => serviceProvider.GetRequiredService<AddTemplateNoteViewModel>());
         }
     }
 }

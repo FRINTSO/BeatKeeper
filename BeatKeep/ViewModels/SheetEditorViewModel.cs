@@ -69,12 +69,16 @@ namespace BeatKeeper.ViewModels
         public ICommand SaveSheet { get; }
         public ICommand CloseSheet { get; }
 
-        public SheetEditorViewModel(SheetStore sheetStore, TemplateNotesStore templateNotesStore, MusicBook musicBook, INavigationService<SheetListingViewModel> navigationService)
+        public SheetEditorViewModel(SheetStore sheetStore,
+            TemplateNotesStore templateNotesStore,
+            MusicBook musicBook,
+            INavigationService<SheetListingViewModel> navigationService,
+            INavigationService<AddTemplateNoteViewModel> modalNavigationService)
         {
             _sheetStore = sheetStore;
             _playbackCancellationStore = new();
             SheetNoteViewModel = new(sheetStore, templateNotesStore);
-            TemplateNoteListingViewModel = new(templateNotesStore);
+            TemplateNoteListingViewModel = new(templateNotesStore, modalNavigationService);
 
             PlaySheet = new PlaySheetCommand(this, sheetStore, _playbackCancellationStore);
             PauseSheet = new PauseSheetCommand(this, _playbackCancellationStore);

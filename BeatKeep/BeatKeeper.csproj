@@ -16,9 +16,11 @@
 
   <ItemGroup>
     <None Remove="Resources\eighth-note.png" />
+    <None Remove="Resources\empty.jpg" />
     <None Remove="Resources\half-note.png" />
     <None Remove="Resources\quarter-note.png" />
     <None Remove="Resources\whole-note.png" />
+    <None Remove="Views\empty.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,6 +29,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0" />
     <PackageReference Include="NAudio" Version="2.0.1" />
+    <PackageReference Include="SimpleModal.WPF" Version="1.0.0" />
     <PackageReference Include="System.Windows.Extensions" Version="6.0.0" />
   </ItemGroup>
 
@@ -38,6 +41,9 @@
     <Resource Include="Resources\eighth-note.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\empty.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\half-note.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -47,6 +53,7 @@
     <Resource Include="Resources\whole-note.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Views\empty.jpg" />
   </ItemGroup>
 
   <ItemGroup>

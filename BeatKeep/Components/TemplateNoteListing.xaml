@@ -38,6 +38,6 @@
             </ItemsControl>
         </ScrollViewer>
 
-        <Button Grid.Row="1" Command="{Binding CreateNote}" Content="Add Note" />
+        <Button Grid.Row="1" Command="{Binding AddTemplateNote}" Content="Add Note" />
     </Grid>
 </UserControl>
