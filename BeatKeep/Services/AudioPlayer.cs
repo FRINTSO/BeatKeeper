@@ -1,32 +1,91 @@
-﻿using System.Media;
+﻿using BeatKeeper.Stores;
+using NAudio.Wave;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace BeatKeeper.Services
 {
     public class AudioPlayer : IAudioPlayer
     {
-        private readonly SoundPlayer _player = new(@"C:\Users\willi\source\repos\BeatKeep\BeatKeep\New Project - Instrument (1).wav");
+        private const int SOUND_PLAY_DURATION = 490;
 
-        public AudioPlayer()
+        private readonly SheetStore _sheetStore;
+        private readonly WaveFileReader _waveReader;
+        private readonly WaveChannel32 _channel;
+
+        private CancellationTokenSource _cancellationTokenSource;
+
+        public AudioPlayer(SheetStore sheetStore)
         {
-            Load();
+            _sheetStore = sheetStore;
+
+            _waveReader = new(Path.GetFullPath(@".\Track1_1.wav"));
+            _channel = new WaveChannel32(_waveReader);
         }
 
-        public void Play()
-        {
-            _player.PlayLooping();
-        }
+        public event Action IsPlayingChanged;
 
-        public void Load()
+        private bool _isPlaying;
+        public bool IsPlaying
         {
-            if (!_player.IsLoadCompleted)
+            get => _isPlaying;
+            set
             {
-                _player.LoadAsync();
+                _isPlaying = value;
+                IsPlayingChanged?.Invoke();
             }
         }
 
-        public void Dispose()
+        public async Task PlayAsync()
         {
-            _player.Dispose();
+            _cancellationTokenSource = new();
+
+            IsPlaying = true;
+
+            List<int> noteLengths = _sheetStore.CurrentSheet.GetAllNotes()
+                .Select(
+                x => (int)(x.GetLength(_sheetStore.CurrentSheet.BeatsPerMinute) * 1000d))
+                .ToList();
+
+            foreach (int noteLength in noteLengths)
+            {
+                Thread t = new(new ThreadStart(PlaySound));
+                t.Start();
+
+                try
+                {
+                    await Task.Delay(noteLength, _cancellationTokenSource.Token);
+                }
+                catch (TaskCanceledException)
+                {
+                    _cancellationTokenSource.Dispose();
+                    break;
+                }
+            }
+
+            IsPlaying = false;
+        }
+
+        public void Stop()
+        {
+            if (IsPlaying)
+            {
+                _cancellationTokenSource.Cancel();
+                IsPlaying = false;
+            }
+        }
+
+        private void PlaySound()
+        {
+            DirectSoundOut _output = new();
+            _channel.CurrentTime = _channel.TotalTime.Subtract(TimeSpan.FromMilliseconds(SOUND_PLAY_DURATION));
+
+            _output.Init(_channel);
+            _output.Play();
         }
     }
 }

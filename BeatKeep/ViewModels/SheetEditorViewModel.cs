@@ -51,41 +51,28 @@ namespace BeatKeeper.ViewModels
             }
         }
 
-        public event Action IsPlayingChanged;
-
-        private bool _isPlaying;
-        public bool IsPlaying
-        {
-            get => _isPlaying;
-            set
-            {
-                _isPlaying = value;
-                IsPlayingChanged?.Invoke();
-            }
-        }
-
         public ICommand PlaySheet { get; }
         public ICommand PauseSheet { get; }
         public ICommand SaveSheet { get; }
         public ICommand CloseSheet { get; }
 
-        public SheetEditorViewModel(SheetStore sheetStore, TemplateNotesStore templateNotesStore, MusicBook musicBook, INavigationService<SheetListingViewModel> navigationService)
+        public SheetEditorViewModel(SheetStore sheetStore, TemplateNotesStore templateNotesStore, MusicBook musicBook, IAudioPlayer audioPlayer, INavigationService<SheetListingViewModel> navigationService)
         {
             _sheetStore = sheetStore;
             _playbackCancellationStore = new();
             SheetNoteViewModel = new(sheetStore, templateNotesStore);
             TemplateNoteListingViewModel = new(templateNotesStore);
 
-            PlaySheet = new PlaySheetCommand(this, sheetStore, _playbackCancellationStore);
-            PauseSheet = new PauseSheetCommand(this, _playbackCancellationStore);
+            PlaySheet = new PlaySheetCommand(audioPlayer);
+            PauseSheet = new StopSheetCommand(audioPlayer);
             SaveSheet = new SaveSheetCommand(this, musicBook, sheetStore);
-            CloseSheet = new NavigateCommand<SheetListingViewModel>(navigationService);
+            CloseSheet = new CloseSheetEditorCommand(audioPlayer, navigationService);
         }
 
         public override void Dispose()
         {
             SheetNoteViewModel.Dispose();
-            ((PauseSheetCommand)PauseSheet).Dispose();
+            ((StopSheetCommand)PauseSheet).Dispose();
 
             base.Dispose();
         }
