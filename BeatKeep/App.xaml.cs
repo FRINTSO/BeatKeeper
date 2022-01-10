@@ -25,6 +25,9 @@ namespace BeatKeeper
             services.AddSingleton<SheetStore>();
             services.AddSingleton<TemplateNotesStore>();
             services.AddSingleton<NavigationStore>();
+            services.AddSingleton<IAudioPlayer>(
+                s => new AudioPlayer(
+                    s.GetRequiredService<SheetStore>()));
 
             services.AddTransient<INavigationService<SheetListingViewModel>>(s => CreateSheetListingNavigationService(s));
             services.AddTransient<INavigationService<SheetEditorViewModel>>(s => CreateSheetEditorNavigationService(s));
@@ -39,6 +42,7 @@ namespace BeatKeeper
                     s.GetRequiredService<SheetStore>(),
                     s.GetRequiredService<TemplateNotesStore>(),
                     s.GetRequiredService<MusicBook>(),
+                    s.GetRequiredService<IAudioPlayer>(),
                     CreateSheetListingNavigationService(s)));
             services.AddTransient<SheetViewModel>(
                 s => new SheetViewModel(
