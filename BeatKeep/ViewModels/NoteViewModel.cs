@@ -19,13 +19,13 @@ namespace BeatKeeper.ViewModels
         public ICommand AddNote { get; }
         public ICommand RemoveNote { get; }
 
-        public NoteViewModel(Note note, string noteImageSource, SheetStore sheetStore)
+        public NoteViewModel(Note note, string noteImageSource, Sheet sheet)
         {
             _note = note;
             NoteImageSource = noteImageSource;
 
-            AddNote = new AddNoteToSheetCommand(this, sheetStore);
-            RemoveNote = new RemoveNoteFromSheetCommand(this, sheetStore);
+            AddNote = new AddNoteToSheetCommand(this, sheet);
+            RemoveNote = new RemoveNoteFromSheetCommand(this, sheet);
         }
     }
 }

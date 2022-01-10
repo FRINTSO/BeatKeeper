@@ -8,7 +8,7 @@ namespace BeatKeeper.Models
         public Guid Id { get; }
         public string Name { get; set; }
         public short BeatsPerMinute { get; set; }
-        private readonly List<Note> _notes;
+        private List<Note> _notes;
 
         public TimeSpan Length => CalculateSongLength();
 

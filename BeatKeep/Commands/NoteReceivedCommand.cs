@@ -1,4 +1,5 @@
-﻿using BeatKeeper.ViewModels;
+﻿using BeatKeeper.Stores;
+using BeatKeeper.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;

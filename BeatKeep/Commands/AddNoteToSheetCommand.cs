@@ -9,25 +9,23 @@ namespace BeatKeeper.Commands
     public class AddNoteToSheetCommand : CommandBase
     {
         private readonly NoteViewModel _noteViewModel;
-        private readonly SheetStore _sheetStore;
+        private readonly Sheet _sheet;
 
-        public static event Action SheetAdded;
+        public static event Action NoteAdded;
 
-        public AddNoteToSheetCommand(NoteViewModel noteViewModel, SheetStore sheetStore)
+        public AddNoteToSheetCommand(NoteViewModel noteViewModel, Sheet sheet)
         {
             _noteViewModel = noteViewModel;
-            _sheetStore = sheetStore;
+            _sheet = sheet;
         }
 
         public override void Execute(object parameter)
         {
-            // Add a note to the current sheet!?!?!?!?!??! Sheet Store has the current sheet
-
             Note note = new(_noteViewModel.RelativeDuration, _noteViewModel.Dots);
 
-            _sheetStore.CurrentSheet.AddNote(note);
+            _sheet.AddNote(note);
 
-            SheetAdded?.Invoke();
+            NoteAdded?.Invoke();
         }
     }
 }

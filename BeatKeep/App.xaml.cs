@@ -59,7 +59,7 @@ namespace BeatKeeper
         protected override void OnStartup(StartupEventArgs e)
         {
             // Desperate load template notes : Fix later
-            _serviceProvider.GetRequiredService<TemplateNotesStore>().Load(_serviceProvider.GetRequiredService<SheetStore>());
+            //_serviceProvider.GetRequiredService<TemplateNotesStore>().Load(_serviceProvider.GetRequiredService<Sheet>());
 
             INavigationService<SheetListingViewModel> initialNavigationService = _serviceProvider.GetRequiredService<INavigationService<SheetListingViewModel>>();
             initialNavigationService.Navigate();

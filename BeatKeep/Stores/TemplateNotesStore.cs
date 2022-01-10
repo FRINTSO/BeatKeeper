@@ -18,14 +18,15 @@ namespace BeatKeeper.Stores
             _templateNotes = new List<NoteViewModel>();
         }
 
-        public void Load(SheetStore sheetStore)
+        public void Load(Sheet sheet)
         {
+            _templateNotes.Clear();
             _templateNotes.AddRange(
                 new List<NoteViewModel>() {
-                    new NoteViewModel(new Note(1, 0), "/Resources/whole-note.png", sheetStore),
-                    new NoteViewModel(new Note(1 / 2f, 0), "/Resources/half-note.png", sheetStore),
-                    new NoteViewModel(new Note(1 / 4f, 0), "/Resources/quarter-note.png", sheetStore),
-                    new NoteViewModel(new Note(1 / 8f, 0), "/Resources/eighth-note.png", sheetStore)
+                    new NoteViewModel(new Note(1, 0), "/Resources/whole-note.png", sheet),
+                    new NoteViewModel(new Note(1 / 2f, 0), "/Resources/half-note.png", sheet),
+                    new NoteViewModel(new Note(1 / 4f, 0), "/Resources/quarter-note.png", sheet),
+                    new NoteViewModel(new Note(1 / 8f, 0), "/Resources/eighth-note.png", sheet)
                 });
         }
 

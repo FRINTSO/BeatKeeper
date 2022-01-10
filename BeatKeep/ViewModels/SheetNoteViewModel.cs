@@ -13,7 +13,7 @@ namespace BeatKeeper.ViewModels
 {
     public class SheetNoteViewModel : ViewModelBase
     {
-        private readonly SheetStore _sheetStore;
+        private readonly Sheet _sheet;
         private readonly TemplateNotesStore _templateNotesStore;
         private readonly ObservableCollection<NoteViewModel> _notes;
 
@@ -64,17 +64,17 @@ namespace BeatKeeper.ViewModels
         public ICommand NoteReceivedCommand { get; }
         public ICommand NoteInsertedCommand { get; }
 
-        public SheetNoteViewModel(SheetStore sheetStore, TemplateNotesStore templateNotesStore)
+        public SheetNoteViewModel(Sheet sheet, TemplateNotesStore templateNotesStore)
         {
-            _sheetStore = sheetStore;
+            _sheet = sheet;
             _templateNotesStore = templateNotesStore;
             _notes = new();
 
+            AddNoteToSheetCommand.NoteAdded += UpdateNotes;
+            RemoveNoteFromSheetCommand.NoteRemoved += UpdateNotes;
+
             NoteReceivedCommand = new NoteReceivedCommand(this);
             NoteInsertedCommand = new NoteInsertedCommand(this);
-
-            AddNoteToSheetCommand.SheetAdded += UpdateNotes;
-            RemoveNoteFromSheetCommand.SheetRemoved += UpdateNotes;
 
             UpdateNotes();
         }
@@ -83,9 +83,9 @@ namespace BeatKeeper.ViewModels
         {
             Note note = new(noteViewModel.RelativeDuration, noteViewModel.Dots);
 
-            noteViewModel = new(note, noteViewModel.NoteImageSource, _sheetStore);
+            noteViewModel = new(note, noteViewModel.NoteImageSource, _sheet);
 
-            _sheetStore.CurrentSheet.AddNote(note);
+            _sheet.AddNote(note);
             _notes.Add(noteViewModel);
         }
 
@@ -101,7 +101,7 @@ namespace BeatKeeper.ViewModels
 
             if (oldIndex != -1 && nextIndex != -1)
             {
-                _sheetStore.CurrentSheet.MoveNotes(oldIndex, nextIndex);
+                _sheet.MoveNotes(oldIndex, nextIndex);
                 _notes.Move(oldIndex, nextIndex);
             }
         }
@@ -110,22 +110,21 @@ namespace BeatKeeper.ViewModels
         {
             _notes.Clear();
 
-            foreach (Note note in _sheetStore.CurrentSheet.GetAllNotes())
+            foreach (Note note in _sheet.GetAllNotes())
             {
                 // TODO: Resolve image file from context of added note
 
                 var noteImageSource = _templateNotesStore.TemplateNotes.First(templateNote => templateNote.RelativeDuration == note.RelativeDuration).NoteImageSource;
 
-                NoteViewModel noteViewModel = new(note, noteImageSource, _sheetStore);
+                NoteViewModel noteViewModel = new(note, noteImageSource, _sheet);
                 _notes.Add(noteViewModel);
             }
         }
 
         public override void Dispose()
         {
-            AddNoteToSheetCommand.SheetAdded -= UpdateNotes;
-            RemoveNoteFromSheetCommand.SheetRemoved -= UpdateNotes;
-
+            AddNoteToSheetCommand.NoteAdded -= UpdateNotes;
+            RemoveNoteFromSheetCommand.NoteRemoved -= UpdateNotes;
             base.Dispose();
         }
     }
