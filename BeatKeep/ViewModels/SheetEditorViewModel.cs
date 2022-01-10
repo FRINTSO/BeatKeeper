@@ -15,7 +15,7 @@ namespace BeatKeeper.ViewModels
 {
     public class SheetEditorViewModel : ViewModelBase
     {
-        private readonly Sheet _sheet;
+        public Sheet Sheet { get; }
 
         // Notes that are used to store notes added until the sheet is saved, then they will be stored in the real sheet
 
@@ -26,17 +26,17 @@ namespace BeatKeeper.ViewModels
 
         public string Name
         {
-            get => _sheet.Name;
+            get => Sheet.Name;
             set
             {
-                _sheet.Name = value;
+                Sheet.Name = value;
                 OnPropertyChanged(nameof(Name));
             }
         }
 
         public short BeatsPerMinute
         {
-            get => _sheet.BeatsPerMinute;
+            get => Sheet.BeatsPerMinute;
             set
             {
 
@@ -49,7 +49,7 @@ namespace BeatKeeper.ViewModels
                     value = 240;
                 }
 
-                _sheet.BeatsPerMinute = value;
+                Sheet.BeatsPerMinute = value;
                 OnPropertyChanged(nameof(BeatsPerMinute));
             }
         }
@@ -74,21 +74,21 @@ namespace BeatKeeper.ViewModels
 
         public SheetEditorViewModel(SheetStore sheetStore, TemplateNotesStore templateNotesStore, MusicBook musicBook, INavigationService<SheetListingViewModel> navigationService)
         {
-            _sheet = new(
+            Sheet = new(
                 sheetStore.CurrentSheet.Name,
                 sheetStore.CurrentSheet.BeatsPerMinute,
                 sheetStore.CurrentSheet.GetAllNotes().ToList());
 
-            templateNotesStore.Load(_sheet);
+            templateNotesStore.Load(Sheet);
 
             _playbackCancellationStore = new();
 
-            SheetNoteViewModel = new(_sheet, templateNotesStore);
+            SheetNoteViewModel = new(Sheet, templateNotesStore);
             TemplateNoteListingViewModel = new(templateNotesStore);
 
             PlaySheet = new PlaySheetCommand(this, sheetStore, _playbackCancellationStore);
             PauseSheet = new PauseSheetCommand(this, _playbackCancellationStore);
-            SaveSheet = new SaveSheetCommand(musicBook, sheetStore, _sheet);
+            SaveSheet = new SaveSheetCommand(musicBook, sheetStore, Sheet);
             CloseSheet = new NavigateCommand<SheetListingViewModel>(navigationService);
 
         }

@@ -21,6 +21,7 @@ namespace BeatKeeper.Commands
 
         public override void Execute(object parameter)
         {
+            return;
             Note note = new(_noteViewModel.RelativeDuration, _noteViewModel.Dots);
 
             _sheet.AddNote(note);
