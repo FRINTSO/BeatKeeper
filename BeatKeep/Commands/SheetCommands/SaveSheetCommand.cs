@@ -7,26 +7,27 @@ namespace BeatKeeper.Commands
 {
     public class SaveSheetCommand : CommandBase
     {
-        private readonly SheetEditorViewModel _sheetEditorViewModel;
         private readonly MusicBook _musicBook;
         private readonly SheetStore _sheetStore;
+        private readonly Sheet _sheet;
 
-        public SaveSheetCommand(SheetEditorViewModel sheetEditorViewModel, MusicBook musicBook, SheetStore sheetStore)
+        public SaveSheetCommand(MusicBook musicBook, SheetStore sheetStore, Sheet sheet)
         {
-            _sheetEditorViewModel = sheetEditorViewModel;
             _musicBook = musicBook;
             _sheetStore = sheetStore;
+            _sheet = sheet;
         }
 
         public override void Execute(object parameter)
         {
-            if (!_musicBook.ContainsSheetById(_sheetStore.CurrentSheet.Id))
+            if (_musicBook.ContainsSheetById(_sheetStore.CurrentSheet.Id))
             {
-                _musicBook.AddSheet(_sheetStore.CurrentSheet);
+                _musicBook.RemoveSheetById(_sheetStore.CurrentSheet.Id);
             }
 
-            _sheetStore.CurrentSheet.Name = _sheetEditorViewModel.Name.Trim();
-            _sheetStore.CurrentSheet.BeatsPerMinute = _sheetEditorViewModel.BeatsPerMinute;
+            _sheet.Name = _sheet.Name.Trim();
+
+            _musicBook.AddSheet(_sheet);
 
             MessageBox.Show("Sheet was successfully saved.", "Success",
                 MessageBoxButton.OK, MessageBoxImage.Information);

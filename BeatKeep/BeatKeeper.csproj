@@ -65,4 +65,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\TemplateNoteProviders\" />
+  </ItemGroup>
+
 </Project>

@@ -10,28 +10,28 @@ namespace BeatKeeper.Commands
     /// </summary>
     public class AddNoteToSheetCommand : CommandBase
     {
-        // TODO: Fix static event
+        private readonly Sheet _sheet;
+        private readonly TemplateNotesStore _templateNotesStore;
 
-        private readonly NoteViewModel _noteViewModel;  // NoteViewModel containing information about the note that will be added
-        private readonly SheetStore _sheetStore;  // SheetStore containing the current sheet
+        public static event Action NoteAdded;
 
-        public static event Action SheetAdded;
-
-        public AddNoteToSheetCommand(NoteViewModel noteViewModel, SheetStore sheetStore)
+        public AddNoteToSheetCommand(Sheet sheet, TemplateNotesStore templateNotesStore)
         {
-            _noteViewModel = noteViewModel;
-            _sheetStore = sheetStore;
+            _sheet = sheet;
+            _templateNotesStore = templateNotesStore;
         }
 
         public override void Execute(object parameter)
         {
-            Note note = new(_noteViewModel.RelativeDuration, _noteViewModel.Dots);
+            Guid id = (Guid)parameter;
 
+            NoteViewModel noteViewModel = _templateNotesStore.GetTemplateNoteById(id);
 
-            // BUG: Adds note to the current sheet, making saving pointless, since it saves automatically by writing to source
-            _sheetStore.CurrentSheet.AddNote(note);
+            Note note = new(noteViewModel.RelativeDuration, noteViewModel.Dots);
 
-            SheetAdded?.Invoke();
+            _sheet.AddNote(note);
+
+            NoteAdded?.Invoke();
         }
     }
 }

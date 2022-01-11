@@ -1,4 +1,6 @@
-﻿using BeatKeeper.Stores;
+﻿using BeatKeeper.Commands;
+using BeatKeeper.Models;
+using BeatKeeper.Stores;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -10,16 +12,19 @@ namespace BeatKeeper.ViewModels
         private readonly TemplateNotesStore _templateNotesStore;
         private readonly ObservableCollection<NoteViewModel> _templateNotes;
 
-        public TemplateNoteListingViewModel(TemplateNotesStore templateNotesStore)
+        public IEnumerable<NoteViewModel> TemplateNotes => _templateNotes;
+        public ICommand CreateNote { get; }
+        public ICommand AddNoteCommand { get; }
+
+        public TemplateNoteListingViewModel(Sheet sheet, TemplateNotesStore templateNotesStore)
         {
             _templateNotesStore = templateNotesStore;
             _templateNotes = new();
 
+            AddNoteCommand = new AddNoteToSheetCommand(sheet, templateNotesStore);
+
             UpdateTemplateNotes();
         }
-
-        public IEnumerable<NoteViewModel> TemplateNotes => _templateNotes;
-        public ICommand CreateNote { get; }
 
         public void UpdateTemplateNotes()
         {

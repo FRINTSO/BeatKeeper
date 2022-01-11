@@ -10,7 +10,7 @@ namespace BeatKeeper.ViewModels
 {
     public class SheetMusicViewModel : ViewModelBase
     {
-        private readonly SheetStore _sheetStore;
+        private readonly Sheet _sheet;
         private readonly TemplateNotesStore _templateNotesStore;
         private readonly ObservableCollection<NoteViewModel> _notes;
         private NoteViewModel _incomingNoteViewModel;
@@ -66,15 +66,16 @@ namespace BeatKeeper.ViewModels
 
         public ICommand NoteReceivedCommand { get; }
         public ICommand NoteInsertedCommand { get; }
+        public ICommand DeleteNoteCommand { get; }
 
 
         public void AddNote(NoteViewModel noteViewModel)
         {
             Note note = new(noteViewModel.RelativeDuration, noteViewModel.Dots);
 
-            noteViewModel = new(note, noteViewModel.NoteImageSource, _sheetStore);
+            noteViewModel = new(note, noteViewModel.NoteImageSource);
 
-            _sheetStore.CurrentSheet.AddNote(note);
+            _sheet.AddNote(note);
             _notes.Add(noteViewModel);
         }
 
@@ -90,7 +91,7 @@ namespace BeatKeeper.ViewModels
 
             if (oldIndex != -1 && nextIndex != -1)
             {
-                _sheetStore.CurrentSheet.MoveNotes(oldIndex, nextIndex);
+                _sheet.MoveNotes(oldIndex, nextIndex);
                 _notes.Move(oldIndex, nextIndex);
             }
         }
@@ -99,13 +100,13 @@ namespace BeatKeeper.ViewModels
         {
             _notes.Clear();
 
-            foreach (Note note in _sheetStore.CurrentSheet.GetAllNotes())
+            foreach (Note note in _sheet.GetAllNotes())
             {
                 // TODO: Resolve image file from context of added note
 
                 string noteImageSource = _templateNotesStore.TemplateNotes.First(templateNote => templateNote.RelativeDuration == note.RelativeDuration).NoteImageSource;
 
-                NoteViewModel noteViewModel = new(note, noteImageSource, _sheetStore);
+                NoteViewModel noteViewModel = new(note, noteImageSource);
                 _notes.Add(noteViewModel);
             }
         }

@@ -27,17 +27,17 @@ namespace BeatKeeper.ViewModels
 
         public string Name
         {
-            get => _sheetStore.CurrentSheet.Name;
+            get => Sheet.Name;
             set
             {
-                _sheetStore.CurrentSheet.Name = value;
+                Sheet.Name = value;
                 OnPropertyChanged(nameof(Name));
             }
         }
 
         public short BeatsPerMinute
         {
-            get => _sheetStore.CurrentSheet.BeatsPerMinute;
+            get => Sheet.BeatsPerMinute;
             set
             {
 
@@ -50,7 +50,7 @@ namespace BeatKeeper.ViewModels
                     value = 240;
                 }
 
-                _sheetStore.CurrentSheet.BeatsPerMinute = value;
+                Sheet.BeatsPerMinute = value;
                 OnPropertyChanged(nameof(BeatsPerMinute));
             }
         }
