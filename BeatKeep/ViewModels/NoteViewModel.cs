@@ -10,6 +10,15 @@ namespace BeatKeeper.ViewModels
     {
         private readonly Note _note;
 
+        public NoteViewModel(Note note, string noteImageSource, SheetStore sheetStore)
+        {
+            _note = note;
+            NoteImageSource = noteImageSource;
+
+            AddNote = new AddNoteToSheetCommand(this, sheetStore);
+            RemoveNote = new DeleteNoteCommand(this, sheetStore);
+        }
+
         public Guid Id => _note.Id;
         public double RelativeDuration => _note.RelativeDuration;
         public byte Dots => _note.Dots;
@@ -18,14 +27,5 @@ namespace BeatKeeper.ViewModels
         public string NoteImageSource { get; }
         public ICommand AddNote { get; }
         public ICommand RemoveNote { get; }
-
-        public NoteViewModel(Note note, string noteImageSource, SheetStore sheetStore)
-        {
-            _note = note;
-            NoteImageSource = noteImageSource;
-
-            AddNote = new AddNoteToSheetCommand(this, sheetStore);
-            RemoveNote = new RemoveNoteFromSheetCommand(this, sheetStore);
-        }
     }
 }

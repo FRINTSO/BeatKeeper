@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 
 namespace BeatKeeper.Commands
 {
+    /// <summary>
+    /// Class command for playing audio.
+    /// </summary>
     public class PlaySheetCommand : AsyncCommandBase
     {
         private readonly IAudioPlayer _audioPlayer;

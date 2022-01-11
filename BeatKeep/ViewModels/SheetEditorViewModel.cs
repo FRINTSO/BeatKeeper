@@ -2,13 +2,6 @@
 using BeatKeeper.Models;
 using BeatKeeper.Services;
 using BeatKeeper.Stores;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Threading;
 using System.Windows.Input;
 
 namespace BeatKeeper.ViewModels
@@ -16,9 +9,20 @@ namespace BeatKeeper.ViewModels
     public class SheetEditorViewModel : ViewModelBase
     {
         private readonly SheetStore _sheetStore;
-        private readonly PlaybackCancellationStore _playbackCancellationStore;
 
-        public SheetNoteViewModel SheetNoteViewModel { get; }
+        public SheetEditorViewModel(SheetStore sheetStore, TemplateNotesStore templateNotesStore, MusicBook musicBook, IAudioPlayer audioPlayer, INavigationService<SheetListingViewModel> navigationService)
+        {
+            _sheetStore = sheetStore;
+            SheetNoteViewModel = new(sheetStore, templateNotesStore);
+            TemplateNoteListingViewModel = new(templateNotesStore);
+
+            PlaySheet = new PlaySheetCommand(audioPlayer);
+            PauseSheet = new StopSheetCommand(audioPlayer);
+            SaveSheet = new SaveSheetCommand(this, musicBook, sheetStore);
+            CloseSheet = new CloseSheetEditorCommand(audioPlayer, navigationService);
+        }
+
+        public SheetMusicViewModel SheetNoteViewModel { get; }
         public TemplateNoteListingViewModel TemplateNoteListingViewModel { get; }
 
         public string Name
@@ -55,19 +59,6 @@ namespace BeatKeeper.ViewModels
         public ICommand PauseSheet { get; }
         public ICommand SaveSheet { get; }
         public ICommand CloseSheet { get; }
-
-        public SheetEditorViewModel(SheetStore sheetStore, TemplateNotesStore templateNotesStore, MusicBook musicBook, IAudioPlayer audioPlayer, INavigationService<SheetListingViewModel> navigationService)
-        {
-            _sheetStore = sheetStore;
-            _playbackCancellationStore = new();
-            SheetNoteViewModel = new(sheetStore, templateNotesStore);
-            TemplateNoteListingViewModel = new(templateNotesStore);
-
-            PlaySheet = new PlaySheetCommand(audioPlayer);
-            PauseSheet = new StopSheetCommand(audioPlayer);
-            SaveSheet = new SaveSheetCommand(this, musicBook, sheetStore);
-            CloseSheet = new CloseSheetEditorCommand(audioPlayer, navigationService);
-        }
 
         public override void Dispose()
         {

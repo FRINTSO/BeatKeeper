@@ -1,59 +1,48 @@
 ﻿using BeatKeeper.Commands;
 using BeatKeeper.Models;
-using BeatKeeper.Services;
-using BeatKeeper.Stores;
-using System;
+using BeatKeeper.Services.SheetEditorLoader;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace BeatKeeper.ViewModels
 {
     public class SheetListingViewModel : ViewModelBase
     {
-        private readonly SheetStore _sheetStore;
         private readonly MusicBook _musicBook;
-        private readonly INavigationService<SheetEditorViewModel> _navigationService;
+        private readonly ISheetEditorLoader _sheetEditorLoader;
         private readonly ObservableCollection<SheetViewModel> _sheets;
+
+        public SheetListingViewModel(MusicBook musicBook, ISheetEditorLoader sheetEditorLoader)
+        {
+            _musicBook = musicBook;
+            _sheetEditorLoader = sheetEditorLoader;
+            _sheets = new();
+
+            CreateSheet = new CreateSheetCommand(sheetEditorLoader);
+
+            DeleteSheetCommand.SheetDeleted += UpdateSheets;
+
+            UpdateSheets();
+        }
 
         public IEnumerable<SheetViewModel> Sheets => _sheets;
         public ICommand CreateSheet { get; }
 
-        public SheetListingViewModel(SheetStore sheetStore, MusicBook musicBook, INavigationService<SheetEditorViewModel> navigationService)
-        {
-            _sheetStore = sheetStore;
-            _musicBook = musicBook;
-            _navigationService = navigationService;
-            _sheets = new();
-
-            CreateSheet = new CreateSheetCommand(sheetStore, navigationService);
-
-            RemoveSheetCommand.SheetRemoved += OnRemoveSheet;
-
-            UpdateSheets();
-        }
-
-        private void OnRemoveSheet()
-        {
-            UpdateSheets();
-        }
-        
         public void UpdateSheets()
         {
             _sheets.Clear();
 
             foreach (Sheet sheet in _musicBook.GetAllSheets())
             {
-                SheetViewModel sheetViewModel = new(sheet, _sheetStore, _musicBook, _navigationService);
+                SheetViewModel sheetViewModel = new(sheet, _musicBook, _sheetEditorLoader);
                 _sheets.Add(sheetViewModel);
             }
         }
 
         public override void Dispose()
         {
-            RemoveSheetCommand.SheetRemoved -= OnRemoveSheet;
+            DeleteSheetCommand.SheetDeleted -= UpdateSheets;
 
             base.Dispose();
         }

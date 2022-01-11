@@ -10,9 +10,6 @@ namespace BeatKeeper.ViewModels
         private readonly TemplateNotesStore _templateNotesStore;
         private readonly ObservableCollection<NoteViewModel> _templateNotes;
 
-        public IEnumerable<NoteViewModel> TemplateNotes => _templateNotes;
-        public ICommand CreateNote { get; }
-
         public TemplateNoteListingViewModel(TemplateNotesStore templateNotesStore)
         {
             _templateNotesStore = templateNotesStore;
@@ -20,6 +17,9 @@ namespace BeatKeeper.ViewModels
 
             UpdateTemplateNotes();
         }
+
+        public IEnumerable<NoteViewModel> TemplateNotes => _templateNotes;
+        public ICommand CreateNote { get; }
 
         public void UpdateTemplateNotes()
         {

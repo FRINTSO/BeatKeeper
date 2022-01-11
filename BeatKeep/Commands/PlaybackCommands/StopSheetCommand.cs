@@ -2,6 +2,9 @@
 
 namespace BeatKeeper.Commands
 {
+    /// <summary>
+    /// Class command for stopping audio from play.
+    /// </summary>
     public class StopSheetCommand : CommandBase
     {
         private readonly IAudioPlayer _audioPlayer;

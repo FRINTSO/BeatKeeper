@@ -5,12 +5,7 @@ namespace BeatKeeper.Models
 {
     public class Sheet
     {
-        public Guid Id { get; }
-        public string Name { get; set; }
-        public short BeatsPerMinute { get; set; }
         private readonly List<Note> _notes;
-
-        public TimeSpan Length => CalculateSongLength();
 
         public Sheet(string name, short beatsPerMinute) : this(name, beatsPerMinute, new List<Note>())
         {
@@ -24,21 +19,14 @@ namespace BeatKeeper.Models
             _notes = notes;
         }
 
+        public Guid Id { get; }
+        public string Name { get; set; }
+        public short BeatsPerMinute { get; set; }
+        public TimeSpan Length => CalculateSongLength();
+
         public IEnumerable<Note> GetAllNotes()
         {
             return _notes;
-        }
-
-        private TimeSpan CalculateSongLength()
-        {
-            double noteLengths = 0;
-
-            foreach (Note note in _notes)
-            {
-                noteLengths += note.GetLength(BeatsPerMinute);
-            }
-
-            return TimeSpan.FromSeconds(noteLengths);
         }
 
         public void MoveNotes(int oldIndex, int newIndex)
@@ -54,7 +42,7 @@ namespace BeatKeeper.Models
             _notes.Add(note);
         }
 
-        public void RemoveNoteById(Guid id)
+        public void DeleteNoteById(Guid id)
         {
             int index = _notes.FindIndex(sheet => sheet.Id == id);
 
@@ -65,6 +53,18 @@ namespace BeatKeeper.Models
             }
 
             throw new Exception("Note not found.");
+        }
+
+        private TimeSpan CalculateSongLength()
+        {
+            double noteLengths = 0;
+
+            foreach (Note note in _notes)
+            {
+                noteLengths += note.GetLength(BeatsPerMinute);
+            }
+
+            return TimeSpan.FromSeconds(noteLengths);
         }
     }
 }

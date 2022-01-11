@@ -1,15 +1,19 @@
 ﻿using BeatKeeper.Models;
 using BeatKeeper.Stores;
 using BeatKeeper.ViewModels;
-using Microsoft.Extensions.Logging;
 using System;
 
 namespace BeatKeeper.Commands
 {
+    /// <summary>
+    /// Class command responsible for adding a note to a sheet.
+    /// </summary>
     public class AddNoteToSheetCommand : CommandBase
     {
-        private readonly NoteViewModel _noteViewModel;
-        private readonly SheetStore _sheetStore;
+        // TODO: Fix static event
+
+        private readonly NoteViewModel _noteViewModel;  // NoteViewModel containing information about the note that will be added
+        private readonly SheetStore _sheetStore;  // SheetStore containing the current sheet
 
         public static event Action SheetAdded;
 
@@ -21,10 +25,10 @@ namespace BeatKeeper.Commands
 
         public override void Execute(object parameter)
         {
-            // Add a note to the current sheet!?!?!?!?!??! Sheet Store has the current sheet
-
             Note note = new(_noteViewModel.RelativeDuration, _noteViewModel.Dots);
 
+
+            // BUG: Adds note to the current sheet, making saving pointless, since it saves automatically by writing to source
             _sheetStore.CurrentSheet.AddNote(note);
 
             SheetAdded?.Invoke();

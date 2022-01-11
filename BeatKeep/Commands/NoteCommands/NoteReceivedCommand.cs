@@ -1,17 +1,15 @@
 ﻿using BeatKeeper.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BeatKeeper.Commands
 {
+    /// <summary>
+    /// Class command for a note dropped in the sheet editor.
+    /// </summary>
     public class NoteReceivedCommand : CommandBase
     {
-        private readonly SheetNoteViewModel _sheetNoteViewModel;
+        private readonly SheetMusicViewModel _sheetNoteViewModel;
 
-        public NoteReceivedCommand(SheetNoteViewModel sheetNoteViewModel)
+        public NoteReceivedCommand(SheetMusicViewModel sheetNoteViewModel)
         {
             _sheetNoteViewModel = sheetNoteViewModel;
         }

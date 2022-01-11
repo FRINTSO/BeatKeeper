@@ -1,9 +1,4 @@
 ﻿using BeatKeeper.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BeatKeeper.Stores
 {
@@ -13,10 +8,7 @@ namespace BeatKeeper.Stores
         public Sheet CurrentSheet
         {
             get => _currentSheet;
-            set
-            {
-                _currentSheet = value;
-            }
+            set => _currentSheet = value;
         }
     }
 }

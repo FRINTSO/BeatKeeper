@@ -1,8 +1,6 @@
 ﻿using BeatKeeper.Models;
 using BeatKeeper.Stores;
 using BeatKeeper.ViewModels;
-using System;
-using System.ComponentModel;
 using System.Windows;
 
 namespace BeatKeeper.Commands

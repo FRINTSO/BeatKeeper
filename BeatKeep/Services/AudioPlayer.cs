@@ -18,6 +18,7 @@ namespace BeatKeeper.Services
         private readonly WaveChannel32 _channel;
 
         private CancellationTokenSource _cancellationTokenSource;
+        private bool _isPlaying;
 
         public AudioPlayer(SheetStore sheetStore)
         {
@@ -29,7 +30,6 @@ namespace BeatKeeper.Services
 
         public event Action IsPlayingChanged;
 
-        private bool _isPlaying;
         public bool IsPlaying
         {
             get => _isPlaying;

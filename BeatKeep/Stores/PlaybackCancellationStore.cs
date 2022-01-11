@@ -5,6 +5,12 @@ namespace BeatKeeper.Stores
     public class PlaybackCancellationStore
     {
         private CancellationTokenSource _currentCancellationTokenSource;
+
+        public PlaybackCancellationStore()
+        {
+            _currentCancellationTokenSource = new();
+        }
+
         public CancellationTokenSource CurrentCancellationTokenSource
         {
             get => _currentCancellationTokenSource;
@@ -13,11 +19,6 @@ namespace BeatKeeper.Stores
                 _currentCancellationTokenSource.Dispose();
                 _currentCancellationTokenSource = value;
             }
-        }
-
-        public PlaybackCancellationStore()
-        {
-            _currentCancellationTokenSource = new();
         }
     }
 }

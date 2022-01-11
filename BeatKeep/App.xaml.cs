@@ -1,12 +1,11 @@
 ﻿using BeatKeeper.Models;
 using BeatKeeper.Services;
+using BeatKeeper.Services.SheetEditorLoader;
 using BeatKeeper.Stores;
 using BeatKeeper.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Windows;
-using Microsoft.Extensions.Logging;
-using BeatKeeper.Commands;
 
 namespace BeatKeeper
 {
@@ -28,28 +27,37 @@ namespace BeatKeeper
             services.AddSingleton<IAudioPlayer>(
                 s => new AudioPlayer(
                     s.GetRequiredService<SheetStore>()));
+            services.AddSingleton<ISheetEditorLoader>(
+                s => new SheetEditorLoader(
+                    s.GetRequiredService<SheetStore>(),
+                    s.GetRequiredService<INavigationService<SheetEditorViewModel>>()));
 
-            services.AddTransient<INavigationService<SheetListingViewModel>>(s => CreateSheetListingNavigationService(s));
-            services.AddTransient<INavigationService<SheetEditorViewModel>>(s => CreateSheetEditorNavigationService(s));
+            services.AddTransient<INavigationService<SheetListingViewModel>>(
+                s => new LayoutNavigationService<SheetListingViewModel>(
+                    s.GetRequiredService<NavigationStore>(),
+                    () => s.GetRequiredService<SheetListingViewModel>()));
+
+            services.AddTransient<INavigationService<SheetEditorViewModel>>(
+                s => new LayoutNavigationService<SheetEditorViewModel>(
+                    s.GetRequiredService<NavigationStore>(),
+                    () => s.GetRequiredService<SheetEditorViewModel>()));
 
             services.AddTransient<SheetListingViewModel>(
                 s => new SheetListingViewModel(
-                    s.GetRequiredService<SheetStore>(),
                     s.GetRequiredService<MusicBook>(),
-                    CreateSheetEditorNavigationService(s)));
+                    s.GetRequiredService<ISheetEditorLoader>()));
             services.AddTransient<SheetEditorViewModel>(
                 s => new SheetEditorViewModel(
                     s.GetRequiredService<SheetStore>(),
                     s.GetRequiredService<TemplateNotesStore>(),
                     s.GetRequiredService<MusicBook>(),
                     s.GetRequiredService<IAudioPlayer>(),
-                    CreateSheetListingNavigationService(s)));
+                    s.GetRequiredService<INavigationService<SheetListingViewModel>>()));
             services.AddTransient<SheetViewModel>(
                 s => new SheetViewModel(
                     s.GetRequiredService<Sheet>(),
-                    s.GetRequiredService<SheetStore>(),
                     s.GetRequiredService<MusicBook>(),
-                    CreateSheetEditorNavigationService(s)));
+                    s.GetRequiredService<ISheetEditorLoader>()));
             services.AddSingleton<MainViewModel>();
 
             services.AddSingleton<MainWindow>(s => new MainWindow()
@@ -72,20 +80,6 @@ namespace BeatKeeper
             MainWindow.Show();
 
             base.OnStartup(e);
-        }
-
-        private INavigationService<SheetListingViewModel> CreateSheetListingNavigationService(IServiceProvider serviceProvider)
-        {
-            return new LayoutNavigationService<SheetListingViewModel>(
-                serviceProvider.GetRequiredService<NavigationStore>(),
-                () => serviceProvider.GetRequiredService<SheetListingViewModel>());
-        }
-
-        private INavigationService<SheetEditorViewModel> CreateSheetEditorNavigationService(IServiceProvider serviceProvider)
-        {
-            return new LayoutNavigationService<SheetEditorViewModel>(
-                serviceProvider.GetRequiredService<NavigationStore>(),
-                () => serviceProvider.GetRequiredService<SheetEditorViewModel>());
         }
     }
 }

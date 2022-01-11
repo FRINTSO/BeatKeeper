@@ -1,7 +1,5 @@
-﻿using BeatKeeper.Commands;
-using BeatKeeper.Models;
+﻿using BeatKeeper.Models;
 using BeatKeeper.ViewModels;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 
@@ -9,6 +7,8 @@ namespace BeatKeeper.Stores
 {
     public class TemplateNotesStore
     {
+        // TODO: Add real implementation
+
         private readonly List<NoteViewModel> _templateNotes;
 
         public IEnumerable<NoteViewModel> TemplateNotes => _templateNotes;

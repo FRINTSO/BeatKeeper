@@ -3,6 +3,9 @@ using BeatKeeper.ViewModels;
 
 namespace BeatKeeper.Commands
 {
+    /// <summary>
+    /// Class command for closing the sheet editor and navigating to sheet listing.
+    /// </summary>
     public class CloseSheetEditorCommand : CommandBase
     {
         private readonly IAudioPlayer _audioPlayer;
