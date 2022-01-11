@@ -19,7 +19,7 @@ namespace BeatKeeper.ViewModels
             TemplateNoteListingViewModel = new(_sheetStore, templateNotesStore);
 
             PlaySheet = new PlaySheetCommand(audioPlayer);
-            PauseSheet = new StopSheetCommand(audioPlayer);
+            StopSheet = new StopSheetCommand(audioPlayer);
             SaveSheet = new SaveSheetCommand(musicBook, sheetStore);
             CloseSheet = new CloseSheetEditorCommand(audioPlayer, navigationService);
         }
@@ -58,14 +58,14 @@ namespace BeatKeeper.ViewModels
         }
 
         public ICommand PlaySheet { get; }
-        public ICommand PauseSheet { get; }
+        public ICommand StopSheet { get; }
         public ICommand SaveSheet { get; }
         public ICommand CloseSheet { get; }
 
         public override void Dispose()
         {
             SheetNoteViewModel.Dispose();
-            ((StopSheetCommand)PauseSheet).Dispose();
+            ((StopSheetCommand)StopSheet).Dispose();
 
             base.Dispose();
         }
