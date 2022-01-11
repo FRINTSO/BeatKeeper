@@ -1,31 +1,43 @@
 ﻿using BeatKeeper.Commands;
 using BeatKeeper.Models;
 using BeatKeeper.Stores;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace BeatKeeper.ViewModels
 {
-    public class SheetNoteViewModel : ViewModelBase
+    public class SheetMusicViewModel : ViewModelBase
     {
         private readonly SheetStore _sheetStore;
         private readonly TemplateNotesStore _templateNotesStore;
         private readonly ObservableCollection<NoteViewModel> _notes;
+        private NoteViewModel _incomingNoteViewModel;
+        private NoteViewModel _insertedNoteViewModel;
+        private NoteViewModel _targetNoteViewModel;
+
+        public SheetMusicViewModel(SheetStore sheetStore, TemplateNotesStore templateNotesStore)
+        {
+            _sheetStore = sheetStore;
+            _templateNotesStore = templateNotesStore;
+            _notes = new();
+
+            AddNoteToSheetCommand.NoteAdded += UpdateNotes;
+            DeleteNoteCommand.NoteDeleted += UpdateNotes;
+
+            NoteReceivedCommand = new NoteReceivedCommand(this);
+            NoteInsertedCommand = new NoteInsertedCommand(this);
+            DeleteNote = new DeleteNoteCommand(sheetStore);
+
+            UpdateNotes();
+        }
 
         public IEnumerable<NoteViewModel> Notes => _notes;
 
-        private NoteViewModel _incomingNoteViewModel;
         public NoteViewModel IncomingNoteViewModel
         {
-            get
-            {
-                return _incomingNoteViewModel;
-            }
+            get => _incomingNoteViewModel;
             set
             {
                 _incomingNoteViewModel = value;
@@ -33,13 +45,9 @@ namespace BeatKeeper.ViewModels
             }
         }
 
-        private NoteViewModel _insertedNoteViewModel;
         public NoteViewModel InsertedNoteViewModel
         {
-            get
-            {
-                return _insertedNoteViewModel;
-            }
+            get => _insertedNoteViewModel;
             set
             {
                 _insertedNoteViewModel = value;
@@ -47,13 +55,9 @@ namespace BeatKeeper.ViewModels
             }
         }
 
-        private NoteViewModel _targetNoteViewModel;
         public NoteViewModel TargetNoteViewModel
         {
-            get
-            {
-                return _targetNoteViewModel;
-            }
+            get => _targetNoteViewModel;
             set
             {
                 _targetNoteViewModel = value;
@@ -63,27 +67,14 @@ namespace BeatKeeper.ViewModels
 
         public ICommand NoteReceivedCommand { get; }
         public ICommand NoteInsertedCommand { get; }
+        public ICommand DeleteNote { get; }
 
-        public SheetNoteViewModel(SheetStore sheetStore, TemplateNotesStore templateNotesStore)
-        {
-            _sheetStore = sheetStore;
-            _templateNotesStore = templateNotesStore;
-            _notes = new();
-
-            NoteReceivedCommand = new NoteReceivedCommand(this);
-            NoteInsertedCommand = new NoteInsertedCommand(this);
-
-            AddNoteToSheetCommand.SheetAdded += UpdateNotes;
-            RemoveNoteFromSheetCommand.SheetRemoved += UpdateNotes;
-
-            UpdateNotes();
-        }
 
         public void AddNote(NoteViewModel noteViewModel)
         {
             Note note = new(noteViewModel.RelativeDuration, noteViewModel.Dots);
 
-            noteViewModel = new(note, noteViewModel.NoteImageSource, _sheetStore);
+            noteViewModel = new(note, noteViewModel.NoteImageSource);
 
             _sheetStore.CurrentSheet.AddNote(note);
             _notes.Add(noteViewModel);
@@ -114,17 +105,17 @@ namespace BeatKeeper.ViewModels
             {
                 // TODO: Resolve image file from context of added note
 
-                var noteImageSource = _templateNotesStore.TemplateNotes.First(templateNote => templateNote.RelativeDuration == note.RelativeDuration).NoteImageSource;
+                string noteImageSource = _templateNotesStore.TemplateNotes.First(templateNote => templateNote.RelativeDuration == note.RelativeDuration).NoteImageSource;
 
-                NoteViewModel noteViewModel = new(note, noteImageSource, _sheetStore);
+                NoteViewModel noteViewModel = new(note, noteImageSource);
                 _notes.Add(noteViewModel);
             }
         }
 
         public override void Dispose()
         {
-            AddNoteToSheetCommand.SheetAdded -= UpdateNotes;
-            RemoveNoteFromSheetCommand.SheetRemoved -= UpdateNotes;
+            AddNoteToSheetCommand.NoteAdded -= UpdateNotes;
+            DeleteNoteCommand.NoteDeleted -= UpdateNotes;
 
             base.Dispose();
         }

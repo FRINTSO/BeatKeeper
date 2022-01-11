@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BeatKeeper.ViewModels
+﻿namespace BeatKeeper.ViewModels
 {
     public class LayoutViewModel : ViewModelBase
     {
-        public ViewModelBase ContentViewModel { get; }
 
         public LayoutViewModel(ViewModelBase contentViewModel)
         {
             ContentViewModel = contentViewModel;
         }
+
+        public ViewModelBase ContentViewModel { get; }
 
         public override void Dispose()
         {

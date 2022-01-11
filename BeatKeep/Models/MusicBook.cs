@@ -18,16 +18,6 @@ namespace BeatKeeper.Models
             return _sheets;
         }
 
-        public bool ContainsSheetById(Guid Id)
-        {
-            return _sheets.Exists(sheet => sheet.Id == Id);
-        }
-
-        public Sheet GetSheetById(Guid Id)
-        {
-            return _sheets.Find(sheet => sheet.Id == Id);
-        }
-
         public void AddSheet(Sheet sheet)
         {
             foreach (Sheet existingSheet in _sheets)
@@ -41,7 +31,17 @@ namespace BeatKeeper.Models
             _sheets.Add(sheet);
         }
 
-        public void RemoveSheetById(Guid Id)
+        public bool ContainsSheetById(Guid Id)
+        {
+            return _sheets.Exists(sheet => sheet.Id == Id);
+        }
+
+        public Sheet GetSheetById(Guid Id)
+        {
+            return _sheets.Find(sheet => sheet.Id == Id);
+        }
+
+        public void DeleteSheetById(Guid Id)
         {
             int index = _sheets.FindIndex(sheet => sheet.Id == Id);
 
@@ -52,19 +52,6 @@ namespace BeatKeeper.Models
             }
 
             throw new SheetNotFoundException();
-        }
-
-        public void RemoveSheet(Sheet sheet)
-        {
-            int index;
-
-            if ((index = _sheets.IndexOf(sheet)) != -1)
-            {
-                _sheets.RemoveAt(index);
-                return;
-            }
-
-            throw new SheetNotFoundException(sheet);
         }
     }
 }

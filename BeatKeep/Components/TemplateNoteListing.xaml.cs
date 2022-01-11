@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BeatKeeper.Commands;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,13 @@ namespace BeatKeeper.Components
     {
         private const double _dragThreshold = 1.0;
         private Point _startPosition;
+
+        public static readonly DependencyProperty AddNoteCommandProperty = DependencyProperty.Register("AddNoteCommand", typeof(ICommand), typeof(TemplateNoteListing), new PropertyMetadata(null));
+        public ICommand AddNoteCommand
+        {
+            get { return (ICommand)GetValue(AddNoteCommandProperty); }
+            set { SetValue(AddNoteCommandProperty, value); }
+        }
 
         public TemplateNoteListing()
         {

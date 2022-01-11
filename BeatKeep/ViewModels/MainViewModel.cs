@@ -5,7 +5,6 @@ namespace BeatKeeper.ViewModels
     public class MainViewModel : ViewModelBase
     {
         private readonly NavigationStore _navigationStore;
-        public ViewModelBase CurrentViewModel => _navigationStore.CurrentViewModel;
 
         public MainViewModel(NavigationStore navigationStore)
         {
@@ -13,6 +12,8 @@ namespace BeatKeeper.ViewModels
 
             _navigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
         }
+
+        public ViewModelBase CurrentViewModel => _navigationStore.CurrentViewModel;
 
         private void OnCurrentViewModelChanged()
         {
