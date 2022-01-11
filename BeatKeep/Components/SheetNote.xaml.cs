@@ -9,6 +9,15 @@ namespace BeatKeeper.Components
     /// </summary>
     public partial class SheetNote : UserControl
     {
+        public static readonly DependencyProperty DeleteNoteCommandProperty =
+            DependencyProperty.Register("DeleteNoteCommand", typeof(ICommand), typeof(SheetNote), new PropertyMetadata(null));
+
+        public ICommand DeleteNoteCommand
+        {
+            get => (ICommand)GetValue(DeleteNoteCommandProperty);
+            set => SetValue(DeleteNoteCommandProperty, value);
+        }
+
         public static readonly DependencyProperty IncomingNoteProperty =
             DependencyProperty.Register("IncomingNote", typeof(object), typeof(SheetNote), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 

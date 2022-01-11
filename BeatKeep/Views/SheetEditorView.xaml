@@ -66,9 +66,10 @@
                 InsertedNote="{Binding InsertedNoteViewModel}"
                 TargetNote="{Binding TargetNoteViewModel}"
                 NoteDropCommand="{Binding NoteReceivedCommand}"
-                NoteInsertedCommand="{Binding NoteInsertedCommand}" />
+                NoteInsertedCommand="{Binding NoteInsertedCommand}"
+                DeleteNoteCommand="{Binding DeleteNoteCommand}"/>
 
-            <components:TemplateNoteListing Grid.Column="1" DataContext="{Binding TemplateNoteListingViewModel}" />
+            <components:TemplateNoteListing Grid.Column="1" DataContext="{Binding TemplateNoteListingViewModel}" AddNoteCommand="{Binding AddNoteCommand}" />
 
         </Grid>
         

@@ -79,18 +79,15 @@ namespace BeatKeeper.ViewModels
                 sheetStore.CurrentSheet.BeatsPerMinute,
                 sheetStore.CurrentSheet.GetAllNotes().ToList());
 
-            templateNotesStore.Load(Sheet);
-
             _playbackCancellationStore = new();
 
             SheetNoteViewModel = new(Sheet, templateNotesStore);
-            TemplateNoteListingViewModel = new(templateNotesStore);
+            TemplateNoteListingViewModel = new(Sheet, templateNotesStore);
 
             PlaySheet = new PlaySheetCommand(this, sheetStore, _playbackCancellationStore);
             PauseSheet = new PauseSheetCommand(this, _playbackCancellationStore);
             SaveSheet = new SaveSheetCommand(musicBook, sheetStore, Sheet);
             CloseSheet = new NavigateCommand<SheetListingViewModel>(navigationService);
-
         }
 
         public override void Dispose()

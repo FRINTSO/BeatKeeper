@@ -8,13 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Converters\**" />
     <Compile Remove="Stores\NewFolder\**" />
-    <EmbeddedResource Remove="Converters\**" />
     <EmbeddedResource Remove="Stores\NewFolder\**" />
-    <None Remove="Converters\**" />
     <None Remove="Stores\NewFolder\**" />
-    <Page Remove="Converters\**" />
     <Page Remove="Stores\NewFolder\**" />
   </ItemGroup>
 

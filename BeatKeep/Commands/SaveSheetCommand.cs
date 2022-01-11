@@ -24,6 +24,9 @@ namespace BeatKeeper.Commands
             {
                 _musicBook.RemoveSheetById(_sheetStore.CurrentSheet.Id);
             }
+
+            _sheet.Name = _sheet.Name.Trim();
+
             _musicBook.AddSheet(_sheet);
 
             MessageBox.Show("Sheet was successfully saved.", "Success",

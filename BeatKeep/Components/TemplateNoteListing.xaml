@@ -6,10 +6,14 @@
     xmlns:local="clr-namespace:BeatKeeper.Components"
     xmlns:views="clr-namespace:BeatKeeper.Views"
     xmlns:BeatKeeper="clr-namespace:BeatKeeper"
+    xmlns:converters="clr-namespace:BeatKeeper.Converters"
     x:Class="BeatKeeper.Components.TemplateNoteListing"
     mc:Ignorable="d"
     d:DesignHeight="450"
     d:DesignWidth="400">
+    <UserControl.Resources>
+        <converters:SourceToImageConverter x:Key="SourceToImageConverter" />
+    </UserControl.Resources>
     <Grid
         Background="Transparent">
         <Grid.RowDefinitions>
@@ -33,10 +37,10 @@
                             PreviewMouseMove="TemplateNote_PreviewMouseMove"
                             PreviewMouseDown="TemplateNote_PreviewMouseDown"
                             Command="{Binding AddNoteCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
-                            CommandParameter="{Binding CurrentEditorSheet, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:SheetEditorView}}}">
+                            CommandParameter="{Binding Id}">
                             <Button.Background>
                                 <ImageBrush
-                                    ImageSource="{Binding NoteImageSource}"
+                                    ImageSource="{Binding NoteImageSource, Converter={StaticResource SourceToImageConverter}}"
                                     Stretch="Fill" />
                             </Button.Background>
                         </Button>

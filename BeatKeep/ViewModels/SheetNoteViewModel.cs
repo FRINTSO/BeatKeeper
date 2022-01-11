@@ -63,6 +63,7 @@ namespace BeatKeeper.ViewModels
 
         public ICommand NoteReceivedCommand { get; }
         public ICommand NoteInsertedCommand { get; }
+        public ICommand DeleteNoteCommand { get; }
 
         public SheetNoteViewModel(Sheet sheet, TemplateNotesStore templateNotesStore)
         {
@@ -71,10 +72,11 @@ namespace BeatKeeper.ViewModels
             _notes = new();
 
             AddNoteToSheetCommand.NoteAdded += UpdateNotes;
-            RemoveNoteFromSheetCommand.NoteRemoved += UpdateNotes;
+            DeleteNoteFromSheetCommand.NoteRemoved += UpdateNotes;
 
             NoteReceivedCommand = new NoteReceivedCommand(this);
             NoteInsertedCommand = new NoteInsertedCommand(this);
+            DeleteNoteCommand = new DeleteNoteFromSheetCommand(sheet);
 
             UpdateNotes();
         }
@@ -83,7 +85,7 @@ namespace BeatKeeper.ViewModels
         {
             Note note = new(noteViewModel.RelativeDuration, noteViewModel.Dots);
 
-            noteViewModel = new(note, noteViewModel.NoteImageSource, _sheet);
+            noteViewModel = new(note, noteViewModel.NoteImageSource);
 
             _sheet.AddNote(note);
             _notes.Add(noteViewModel);
@@ -116,7 +118,7 @@ namespace BeatKeeper.ViewModels
 
                 var noteImageSource = _templateNotesStore.TemplateNotes.First(templateNote => templateNote.RelativeDuration == note.RelativeDuration).NoteImageSource;
 
-                NoteViewModel noteViewModel = new(note, noteImageSource, _sheet);
+                NoteViewModel noteViewModel = new(note, noteImageSource);
                 _notes.Add(noteViewModel);
             }
         }
@@ -124,7 +126,7 @@ namespace BeatKeeper.ViewModels
         public override void Dispose()
         {
             AddNoteToSheetCommand.NoteAdded -= UpdateNotes;
-            RemoveNoteFromSheetCommand.NoteRemoved -= UpdateNotes;
+            DeleteNoteFromSheetCommand.NoteRemoved -= UpdateNotes;
             base.Dispose();
         }
     }

@@ -8,21 +8,24 @@ namespace BeatKeeper.Commands
 {
     public class AddNoteToSheetCommand : CommandBase
     {
-        private readonly NoteViewModel _noteViewModel;
         private readonly Sheet _sheet;
+        private readonly TemplateNotesStore _templateNotesStore;
 
         public static event Action NoteAdded;
 
-        public AddNoteToSheetCommand(NoteViewModel noteViewModel, Sheet sheet)
+        public AddNoteToSheetCommand(Sheet sheet, TemplateNotesStore templateNotesStore)
         {
-            _noteViewModel = noteViewModel;
             _sheet = sheet;
+            _templateNotesStore = templateNotesStore;
         }
 
         public override void Execute(object parameter)
         {
-            return;
-            Note note = new(_noteViewModel.RelativeDuration, _noteViewModel.Dots);
+            Guid id = (Guid)parameter;
+
+            NoteViewModel noteViewModel = _templateNotesStore.GetTemplateNoteById(id);
+
+            Note note = new(noteViewModel.RelativeDuration, noteViewModel.Dots);
 
             _sheet.AddNote(note);
 
