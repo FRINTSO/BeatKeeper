@@ -40,7 +40,7 @@
                             CommandParameter="{Binding Id}">
                             <Button.Background>
                                 <ImageBrush
-                                    ImageSource="{Binding NoteImageSource, Converter={StaticResource SourceToImageConverter}}"
+                                    ImageSource="{Binding NoteImageSource}"
                                     Stretch="Fill" />
                             </Button.Background>
                         </Button>
