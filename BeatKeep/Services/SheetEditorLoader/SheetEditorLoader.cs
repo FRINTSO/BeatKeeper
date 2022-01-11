@@ -17,7 +17,8 @@ namespace BeatKeeper.Services.SheetEditorLoader
 
         public void LoadSheet(Sheet sheet)
         {
-            _sheetStore.CurrentSheet = sheet;
+            _sheetStore.SavedSheet = sheet;
+            _sheetStore.CurrentSheet = sheet.Clone();
             _navigationService.Navigate();
         }
     }

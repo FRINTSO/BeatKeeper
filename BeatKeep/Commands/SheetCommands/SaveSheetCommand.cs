@@ -26,6 +26,9 @@ namespace BeatKeeper.Commands
 
             _musicBook.AddSheet(_sheetStore.CurrentSheet);
 
+            _sheetStore.SavedSheet = _sheetStore.CurrentSheet;
+            _sheetStore.CurrentSheet = _sheetStore.CurrentSheet.Clone();
+
             MessageBox.Show("Sheet was successfully saved.", "Success",
                 MessageBoxButton.OK, MessageBoxImage.Information);
         }

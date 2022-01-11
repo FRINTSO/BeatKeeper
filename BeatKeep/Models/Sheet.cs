@@ -29,6 +29,11 @@ namespace BeatKeeper.Models
             return _notes;
         }
 
+        public Sheet Clone()
+        {
+            return new Sheet(Name, BeatsPerMinute, new List<Note>(_notes));
+        }
+
         public void MoveNotes(int oldIndex, int newIndex)
         {
             Note removedItem = _notes[oldIndex];
