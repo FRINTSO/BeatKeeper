@@ -10,14 +10,14 @@ namespace BeatKeeper.Commands
     /// </summary>
     public class AddNoteToSheetCommand : CommandBase
     {
-        private readonly Sheet _sheet;
+        private readonly SheetStore _sheetStore;
         private readonly TemplateNotesStore _templateNotesStore;
 
         public static event Action NoteAdded;
 
-        public AddNoteToSheetCommand(Sheet sheet, TemplateNotesStore templateNotesStore)
+        public AddNoteToSheetCommand(SheetStore sheetStore, TemplateNotesStore templateNotesStore)
         {
-            _sheet = sheet;
+            _sheetStore = sheetStore;
             _templateNotesStore = templateNotesStore;
         }
 
@@ -29,7 +29,7 @@ namespace BeatKeeper.Commands
 
             Note note = new(noteViewModel.RelativeDuration, noteViewModel.Dots);
 
-            _sheet.AddNote(note);
+            _sheetStore.CurrentSheet.AddNote(note);
 
             NoteAdded?.Invoke();
         }

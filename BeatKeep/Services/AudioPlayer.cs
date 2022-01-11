@@ -1,4 +1,5 @@
-﻿using BeatKeeper.Stores;
+﻿using BeatKeeper.Models;
+using BeatKeeper.Stores;
 using NAudio.Wave;
 using System;
 using System.Collections.Generic;

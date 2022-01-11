@@ -1,5 +1,5 @@
-﻿using BeatKeeper.Stores;
-using BeatKeeper.ViewModels;
+﻿using BeatKeeper.Models;
+using BeatKeeper.Stores;
 using System;
 
 namespace BeatKeeper.Commands
@@ -11,22 +11,20 @@ namespace BeatKeeper.Commands
     {
         // TODO: Fix static event
 
-        private readonly NoteViewModel _noteViewModel;
         private readonly SheetStore _sheetStore;
 
-        public static event Action SheetRemoved;
+        public static event Action NoteDeleted;
 
-        public DeleteNoteCommand(NoteViewModel noteViewModel, SheetStore sheetStore)
+        public DeleteNoteCommand(SheetStore sheetStore)
         {
-            _noteViewModel = noteViewModel;
             _sheetStore = sheetStore;
         }
 
         public override void Execute(object parameter)
         {
-            _sheetStore.CurrentSheet.DeleteNoteById(_noteViewModel.Id);
-
-            SheetRemoved?.Invoke();
+            Guid id = (Guid)parameter;
+            _sheetStore.CurrentSheet.DeleteNoteById(id);
+            NoteDeleted?.Invoke();
         }
     }
 }

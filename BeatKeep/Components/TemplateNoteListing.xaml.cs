@@ -35,9 +35,6 @@ namespace BeatKeeper.Components
         public TemplateNoteListing()
         {
             InitializeComponent();
-
-            AddNoteCommand = new AddNoteToSheetCommand(null, null);
-
         }
 
         private void TemplateNote_PreviewMouseMove(object sender, MouseEventArgs e)

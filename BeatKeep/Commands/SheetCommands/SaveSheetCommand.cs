@@ -1,6 +1,5 @@
 ﻿using BeatKeeper.Models;
 using BeatKeeper.Stores;
-using BeatKeeper.ViewModels;
 using System.Windows;
 
 namespace BeatKeeper.Commands
@@ -9,25 +8,23 @@ namespace BeatKeeper.Commands
     {
         private readonly MusicBook _musicBook;
         private readonly SheetStore _sheetStore;
-        private readonly Sheet _sheet;
 
-        public SaveSheetCommand(MusicBook musicBook, SheetStore sheetStore, Sheet sheet)
+        public SaveSheetCommand(MusicBook musicBook, SheetStore sheetStore)
         {
             _musicBook = musicBook;
             _sheetStore = sheetStore;
-            _sheet = sheet;
         }
 
         public override void Execute(object parameter)
         {
-            if (_musicBook.ContainsSheetById(_sheetStore.CurrentSheet.Id))
+            if (_musicBook.ContainsSheetById(_sheetStore.SavedSheet.Id))
             {
-                _musicBook.RemoveSheetById(_sheetStore.CurrentSheet.Id);
+                _musicBook.DeleteSheetById(_sheetStore.SavedSheet.Id);
             }
 
-            _sheet.Name = _sheet.Name.Trim();
+            _sheetStore.CurrentSheet.Name = _sheetStore.CurrentSheet.Name.Trim();
 
-            _musicBook.AddSheet(_sheet);
+            _musicBook.AddSheet(_sheetStore.CurrentSheet);
 
             MessageBox.Show("Sheet was successfully saved.", "Success",
                 MessageBoxButton.OK, MessageBoxImage.Information);

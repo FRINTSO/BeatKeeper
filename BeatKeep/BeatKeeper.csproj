@@ -8,13 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Converters\**" />
+    <Compile Remove="Services\TemplateNoteProviders\**" />
     <Compile Remove="Stores\NewFolder\**" />
-    <EmbeddedResource Remove="Converters\**" />
+    <EmbeddedResource Remove="Services\TemplateNoteProviders\**" />
     <EmbeddedResource Remove="Stores\NewFolder\**" />
-    <None Remove="Converters\**" />
+    <None Remove="Services\TemplateNoteProviders\**" />
     <None Remove="Stores\NewFolder\**" />
-    <Page Remove="Converters\**" />
+    <Page Remove="Services\TemplateNoteProviders\**" />
     <Page Remove="Stores\NewFolder\**" />
   </ItemGroup>
 
@@ -63,10 +63,6 @@
     <None Update="Track1_1.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Services\TemplateNoteProviders\" />
   </ItemGroup>
 
 </Project>

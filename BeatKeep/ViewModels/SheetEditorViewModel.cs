@@ -2,6 +2,7 @@
 using BeatKeeper.Models;
 using BeatKeeper.Services;
 using BeatKeeper.Stores;
+using System.Linq;
 using System.Windows.Input;
 
 namespace BeatKeeper.ViewModels
@@ -13,12 +14,13 @@ namespace BeatKeeper.ViewModels
         public SheetEditorViewModel(SheetStore sheetStore, TemplateNotesStore templateNotesStore, MusicBook musicBook, IAudioPlayer audioPlayer, INavigationService<SheetListingViewModel> navigationService)
         {
             _sheetStore = sheetStore;
-            SheetNoteViewModel = new(sheetStore, templateNotesStore);
-            TemplateNoteListingViewModel = new(templateNotesStore);
+
+            SheetNoteViewModel = new(_sheetStore, templateNotesStore);
+            TemplateNoteListingViewModel = new(_sheetStore, templateNotesStore);
 
             PlaySheet = new PlaySheetCommand(audioPlayer);
             PauseSheet = new StopSheetCommand(audioPlayer);
-            SaveSheet = new SaveSheetCommand(this, musicBook, sheetStore);
+            SaveSheet = new SaveSheetCommand(musicBook, sheetStore);
             CloseSheet = new CloseSheetEditorCommand(audioPlayer, navigationService);
         }
 
@@ -27,17 +29,17 @@ namespace BeatKeeper.ViewModels
 
         public string Name
         {
-            get => Sheet.Name;
+            get => _sheetStore.CurrentSheet.Name;
             set
             {
-                Sheet.Name = value;
+                _sheetStore.CurrentSheet.Name = value;
                 OnPropertyChanged(nameof(Name));
             }
         }
 
         public short BeatsPerMinute
         {
-            get => Sheet.BeatsPerMinute;
+            get => _sheetStore.CurrentSheet.BeatsPerMinute;
             set
             {
 
@@ -50,7 +52,7 @@ namespace BeatKeeper.ViewModels
                     value = 240;
                 }
 
-                Sheet.BeatsPerMinute = value;
+                _sheetStore.CurrentSheet.BeatsPerMinute = value;
                 OnPropertyChanged(nameof(BeatsPerMinute));
             }
         }

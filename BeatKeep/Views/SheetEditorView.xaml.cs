@@ -21,15 +21,6 @@ namespace BeatKeeper.Views
     /// </summary>
     public partial class SheetEditorView : UserControl
     {
-        public static readonly DependencyProperty CurrentEditorSheetProperty =
-            DependencyProperty.Register("CurrentEditorSheet", typeof(object), typeof(SheetEditorView), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.None));
-
-        public object CurrentEditorSheet
-        {
-            get { return (object)GetValue(CurrentEditorSheetProperty); }
-            set { SetValue(CurrentEditorSheetProperty, value); }
-        }
-
         public SheetEditorView()
         {
             InitializeComponent();

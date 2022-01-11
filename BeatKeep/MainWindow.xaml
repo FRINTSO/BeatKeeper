@@ -18,7 +18,7 @@
                 <views:SheetListingView />
             </DataTemplate>
             <DataTemplate DataType="{x:Type viewmodels:SheetEditorViewModel}">
-                <views:SheetEditorView CurrentEditorSheet="{Binding Sheet}" />
+                <views:SheetEditorView />
             </DataTemplate>
             <DataTemplate DataType="{x:Type viewmodels:LayoutViewModel}">
                 <components:Layout />

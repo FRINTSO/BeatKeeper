@@ -10,7 +10,7 @@ namespace BeatKeeper.ViewModels
 {
     public class SheetMusicViewModel : ViewModelBase
     {
-        private readonly Sheet _sheet;
+        private readonly SheetStore _sheetStore;
         private readonly TemplateNotesStore _templateNotesStore;
         private readonly ObservableCollection<NoteViewModel> _notes;
         private NoteViewModel _incomingNoteViewModel;
@@ -23,11 +23,12 @@ namespace BeatKeeper.ViewModels
             _templateNotesStore = templateNotesStore;
             _notes = new();
 
+            AddNoteToSheetCommand.NoteAdded += UpdateNotes;
+            DeleteNoteCommand.NoteDeleted += UpdateNotes;
+
             NoteReceivedCommand = new NoteReceivedCommand(this);
             NoteInsertedCommand = new NoteInsertedCommand(this);
-
-            AddNoteToSheetCommand.SheetAdded += UpdateNotes;
-            DeleteNoteCommand.SheetRemoved += UpdateNotes;
+            DeleteNote = new DeleteNoteCommand(sheetStore);
 
             UpdateNotes();
         }
@@ -66,7 +67,7 @@ namespace BeatKeeper.ViewModels
 
         public ICommand NoteReceivedCommand { get; }
         public ICommand NoteInsertedCommand { get; }
-        public ICommand DeleteNoteCommand { get; }
+        public ICommand DeleteNote { get; }
 
 
         public void AddNote(NoteViewModel noteViewModel)
@@ -75,7 +76,7 @@ namespace BeatKeeper.ViewModels
 
             noteViewModel = new(note, noteViewModel.NoteImageSource);
 
-            _sheet.AddNote(note);
+            _sheetStore.CurrentSheet.AddNote(note);
             _notes.Add(noteViewModel);
         }
 
@@ -91,7 +92,7 @@ namespace BeatKeeper.ViewModels
 
             if (oldIndex != -1 && nextIndex != -1)
             {
-                _sheet.MoveNotes(oldIndex, nextIndex);
+                _sheetStore.CurrentSheet.MoveNotes(oldIndex, nextIndex);
                 _notes.Move(oldIndex, nextIndex);
             }
         }
@@ -100,7 +101,7 @@ namespace BeatKeeper.ViewModels
         {
             _notes.Clear();
 
-            foreach (Note note in _sheet.GetAllNotes())
+            foreach (Note note in _sheetStore.CurrentSheet.GetAllNotes())
             {
                 // TODO: Resolve image file from context of added note
 
@@ -113,8 +114,8 @@ namespace BeatKeeper.ViewModels
 
         public override void Dispose()
         {
-            AddNoteToSheetCommand.SheetAdded -= UpdateNotes;
-            DeleteNoteCommand.SheetRemoved -= UpdateNotes;
+            AddNoteToSheetCommand.NoteAdded -= UpdateNotes;
+            DeleteNoteCommand.NoteDeleted -= UpdateNotes;
 
             base.Dispose();
         }

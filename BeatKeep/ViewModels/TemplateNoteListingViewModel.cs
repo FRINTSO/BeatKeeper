@@ -16,12 +16,12 @@ namespace BeatKeeper.ViewModels
         public ICommand CreateNote { get; }
         public ICommand AddNoteCommand { get; }
 
-        public TemplateNoteListingViewModel(Sheet sheet, TemplateNotesStore templateNotesStore)
+        public TemplateNoteListingViewModel(SheetStore sheetStore, TemplateNotesStore templateNotesStore)
         {
             _templateNotesStore = templateNotesStore;
             _templateNotes = new();
 
-            AddNoteCommand = new AddNoteToSheetCommand(sheet, templateNotesStore);
+            AddNoteCommand = new AddNoteToSheetCommand(sheetStore, templateNotesStore);
 
             UpdateTemplateNotes();
         }
